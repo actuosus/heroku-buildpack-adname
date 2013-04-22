@@ -5,7 +5,7 @@ set -e
 manifest_type="$1"
 
 if [ "$manifest_type" == "" ]; then
-  echo "usage: $0 <nodejs|npm|zmq>"
+  echo "usage: $0 <nodejs|npm|zeromq>"
   exit 1
 fi
 

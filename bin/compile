@@ -12,6 +12,7 @@ unset GIT_DIR
 
 # config
 SCONS_VERSION="1.2.0"
+HEROKU_NODEJS_S3_BUCKET="heroku-buildpack-nodejs"
 S3_BUCKET="heroku-buildpack-adname"
 
 # parse and derive params
@@ -121,7 +122,7 @@ declare -A engine_defaults
 declare -A engine_requests
 
 engine_defaults["node"]="0.8.x"
-engine_defaults["npm"]="1.1.x"
+engine_defaults["npm"]="1.2.x"
 engine_defaults["zeromq"]="3.2.2"
 
 engine_versions["node"]=$(manifest_versions "nodejs")
@@ -159,9 +160,9 @@ CACHE_STORE_DIR="$CACHE_DIR/node_modules/$NODE_VERSION/$NPM_VERSION"
 CACHE_TARGET_DIR="$BUILD_DIR/node_modules"
 
 # s3 packages
-NODE_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/nodejs-${NODE_VERSION}.tgz"
-NPM_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/npm-${NPM_VERSION}.tgz"
-SCONS_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}.tgz"
+NODE_PACKAGE="http://${HEROKU_NODEJS_S3_BUCKET}.s3.amazonaws.com/nodejs-${NODE_VERSION}.tgz"
+NPM_PACKAGE="http://${HEROKU_NODEJS_S3_BUCKET}.s3.amazonaws.com/npm-${NPM_VERSION}.tgz"
+SCONS_PACKAGE="http://${HEROKU_NODEJS_S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}.tgz"
 ZEROMQ_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/zeromq-${ZEROMQ_VERSION}.tgz"
 
 # vendor directories
@@ -189,6 +190,12 @@ PATH="$VENDORED_SCONS:$VENDORED_NODE/bin:$PATH"
 INCLUDE_PATH="$VENDORED_NODE/include"
 export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
+
+echo "-----> Vendoring ZeroMQ into slug"
+mkdir -p "$BUILD_DIR/vendor/zeromq"
+cp "$VENDORED_ZEROMQ" "$BUILD_DIR/vendor/zeromq"
+INCLUDE_PATH="$INCLUDE_PATH:$BUILD_DIR/vendor/zeromq/include"
+LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/lib:$BUILD_DIR/vendor/zeromq/lib"
 
 # install dependencies with npm
 echo "-----> Installing dependencies with npm"
