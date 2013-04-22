@@ -119,7 +119,7 @@ declare -A engine_requests
 
 engine_defaults["node"]="0.8.x"
 engine_defaults["npm"]="1.2.x"
-engine_defaults["zeromq"]="2.3.0"
+engine_defaults["zeromq"]="3.2.2"
 
 engine_versions["node"]=$(manifest_versions "nodejs")
 engine_requests["node"]=$(package_engine_version "node")
