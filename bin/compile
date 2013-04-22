@@ -101,7 +101,7 @@ function package_download() {
   
   package="http://${S3_BUCKET}.s3.amazonaws.com/$engine-$version.tgz"
   
-  echo "Loading $engine package from $package" | indent
+  echo "Loading $engine package from $package to $location" | indent
   curl $package -s -o - | tar xzf - -C $location
 }
 
