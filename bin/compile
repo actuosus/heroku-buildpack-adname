@@ -195,7 +195,7 @@ echo "-----> Vendoring ZeroMQ into slug"
 mkdir -p $BUILD_DIR/vendor/zeromq
 ls -al $VENDORED_ZEROMQ
 cp -r $VENDORED_ZEROMQ $BUILD_DIR/vendor/zeromq
-INCLUDE_PATH="$INCLUDE_PATH:$VENDORED_NODE/include"
+INCLUDE_PATH="$INCLUDE_PATH:$VENDORED_ZEROMQ/include"
 LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/lib:$BUILD_DIR/vendor/zeromq/lib"
 echo INCLUDE_PATH $INCLUDE_PATH
 echo LD_LIBRARY_PATH $LD_LIBRARY_PATH
