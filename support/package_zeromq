@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+zeromq_version="$1"
+
+if [ "$zeromq_version" == "" ]; then
+  echo "usage: $0 VERSION"
+  exit 1
+fi
+
+if [ "$AWS_ID" == "" ]; then
+  echo "must set AWS_ID"
+  exit 1
+fi
+
+if [ "$AWS_SECRET" == "" ]; then
+  echo "must set AWS_SECRET"
+  exit 1
+fi
+
+if [ "$S3_BUCKET" == "" ]; then
+  echo "must set S3_BUCKET"
+  exit 1
+fi
+
+basedir="$( cd -P "$( dirname "$0" )" && pwd )"
+
+# make a temp directory
+tempdir="$( mktemp -t zeromq_XXXX )"
+rm -rf $tempdir
+mkdir -p $tempdir
+cd $tempdir
+
+# build and package zmq for heroku
+vulcan build -v \
+  -n zeromq \
+  -c "cd zeromq-${zeromq_version} && ./configure --prefix=/app/vendor/zeromq && make install" \
+  -p /app/vendor/zeromq \
+  -s http://download.zeromq.org/zeromq-${zeromq_version}.tar.gz \
+  -o $tempdir/zeromq-${zeromq_version}.tgz
+
+# upload nodejs to s3
+$basedir/aws/s3 put $S3_BUCKET \
+  zeromq-${zeromq_version}.tgz $tempdir/zeromq-${zeromq_version}.tgz
+
+# generate manifest
+$basedir/manifest zeromq
