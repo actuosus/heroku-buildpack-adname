@@ -192,11 +192,14 @@ export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
 
 echo "-----> Vendoring ZeroMQ into slug"
-mkdir -p "$BUILD_DIR/vendor/zeromq"
+mkdir -p $BUILD_DIR/vendor/zeromq
 ls -al $VENDORED_ZEROMQ
-cp -r $VENDORED_ZEROMQ "$BUILD_DIR/vendor/zeromq"
+cp -r $VENDORED_ZEROMQ $BUILD_DIR/vendor/zeromq
 INCLUDE_PATH="$INCLUDE_PATH:$BUILD_DIR/vendor/zeromq/include"
 LD_LIBRARY_PATH="/usr/local/lib:/usr/lib:/lib:$BUILD_DIR/vendor/zeromq/lib"
+
+echo INCLUDE_PATH $INCLUDE_PATH
+echo LD_LIBRARY_PATH $LD_LIBRARY_PATH
 
 # install dependencies with npm
 echo "-----> Installing dependencies with npm"
