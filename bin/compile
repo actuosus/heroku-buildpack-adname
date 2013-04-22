@@ -119,7 +119,7 @@ declare -A engine_requests
 
 engine_defaults["node"]="0.8.x"
 engine_defaults["npm"]="1.2.x"
-engine_defaults["zmq"]="2.3.0"
+engine_defaults["zeromq"]="2.3.0"
 
 engine_versions["node"]=$(manifest_versions "nodejs")
 engine_requests["node"]=$(package_engine_version "node")
@@ -127,8 +127,8 @@ engine_requests["node"]=$(package_engine_version "node")
 engine_versions["npm"]=$(manifest_versions "npm")
 engine_requests["npm"]=$(package_engine_version "npm")
 
-engine_versions["zmq"]=$(manifest_versions "zmq")
-engine_requests["npm"]=$(package_engine_version "zmq")
+engine_versions["zeromq"]=$(manifest_versions "zeromq")
+engine_requests["zeromq"]=$(package_engine_version "zeromq")
 
 
 echo "-----> Resolving engine versions"
@@ -147,8 +147,8 @@ echo "Using Node.js version: ${NODE_VERSION}" | indent
 NPM_VERSION=$(package_resolve_version "npm")
 echo "Using npm version: ${NPM_VERSION}" | indent
 
-ZMQ_VERSION=$(package_resolve_version "zmq")
-echo "Using ZeroMQ version: ${ZMQ_VERSION}" | indent
+ZEROMQ_VERSION=$(package_resolve_version "zeromq")
+echo "Using ZeroMQ version: ${ZEROMQ_VERSION}" | indent
 
 
 # cache directories
@@ -159,13 +159,13 @@ CACHE_TARGET_DIR="$BUILD_DIR/node_modules"
 NODE_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/nodejs-${NODE_VERSION}.tgz"
 NPM_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/npm-${NPM_VERSION}.tgz"
 SCONS_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}.tgz"
-ZMQ_PACKAGE="http://download.zeromq.org/zeromq-${ZMQ_VERSION}.tar.gz"
+ZEROMQ_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/zeromq-${ZEROMQ_VERSION}.tar.gz"
 
 # vendor directories
 VENDORED_NODE="$(mktmpdir node)"
 VENDORED_NPM="$(mktmpdir npm)"
 VENDORED_SCONS="$(mktmpdir scons)"
-VENDORED_ZMQ="$(mktmpdir zmq)"
+VENDORED_ZEROMQ="$(mktmpdir zeromq)"
 
 # download and unpack packages
 echo "-----> Fetching Node.js binaries"
@@ -173,7 +173,7 @@ package_download "nodejs" "${NODE_VERSION}" "${VENDORED_NODE}"
 package_download "npm" "${NPM_VERSION}" "${VENDORED_NPM}"
 
 echo "-----> Fetching ZeroMQ binaries"
-package_download "zmq" "${ZMQ_VERSION}" "${VENDORED_ZMQ}"
+package_download "zeromq" "${ZEROMQ_VERSION}" "${VENDORED_ZEROMQ}"
 
 # vendor node into the slug
 PATH="$BUILD_DIR/bin:$PATH"
